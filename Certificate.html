@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waste Management Training</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1, h2 {
+      color: #bb86fc;
+    }
+    
+    iframe {
+      width: 100%;
+      max-width: 700px;
+      height: 400px;
+      margin: 20px 0;
+      border: 3px solid #bb86fc;
+      border-radius: 10px;
+    }
+    
+    .quiz {
+      background: #1e1e1e;
+      padding: 20px;
+      margin: 20px auto;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 15px rgba(187, 134, 252, 0.3);
+      text-align: left;
+    }
+    
+    .quiz p {
+      margin: 10px 0;
+    }
+    
+    label {
+      display: block;
+      margin: 8px 0;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    
+    label:hover {
+      background: #2d2d2d;
+    }
+    
+    input[type="radio"] {
+      margin-right: 8px;
+    }
+    
+    button {
+      background: #bb86fc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      margin: 15px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    button:hover {
+      background: #9a67ea;
+    }
+    
+    #certificate {
+      display: none;
+      margin-top: 20px;
+      background: #1e1e1e;
+      padding: 30px;
+      border: 2px solid #bb86fc;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0px 4px 20px rgba(187, 134, 252, 0.5);
+    }
+    
+    #score-display {
+      margin: 20px 0;
+      padding: 15px;
+      background: #2d2d2d;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    .success {
+      color: #4caf50;
+      font-weight: bold;
+    }
+    
+    .fail {
+      color: #f44336;
+      font-weight: bold;
+    }
+    
+    .question {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #333;
+    }
+    
+    .certificate-content {
+      background: #2d2d2d;
+      padding: 30px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      iframe {
+        height: 250px;
+      }
+      
+      .quiz, #certificate {
+        padding: 15px;
+      }
+      
+      button {
+        width: 100%;
+        padding: 15px;
+      }
+      
+      label {
+        padding: 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 24px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+      
+      iframe {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Waste Management Training Module</h1>
+    <p>Watch this short awareness video on waste segregation:</p>
+
+    <!-- Proper YouTube Embed -->
+    <iframe 
+      src="https://www.youtube.com/embed/q2H7lZKPvpw" 
+      title="Waste Segregation Awareness Video" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen>
+    </iframe>
+
+    <!-- Quiz Section -->
+    <div class="quiz">
+      <h2>Waste Management Quiz</h2>
+      <p>Test your knowledge with this 5-question quiz. Score 80% or higher to earn your certificate!</p>
+
+      <div class="question">
+        <p><b>Q1:</b> What is wet waste?</p>
+        <label><input type="radio" name="q1" value="a"> Plastic and glass</label>
+        <label><input type="radio" name="q1" value="b"> Food scraps and garden waste</label>
+        <label><input type="radio" name="q1" value="c"> Metals and electronics</label>
+      </div>
+
+      <div class="question">
+        <p><b>Q2:</b> Who is a waste generator?</p>
+        <label><input type="radio" name="q2" value="a"> Only factories</label>
+        <label><input type="radio" name="q2" value="b"> Only households</label>
+        <label><input type="radio" name="q2" value="c"> Any person or entity that generates waste</label>
+      </div>
+
+      <div class="question">
+        <p><b>Q3:</b> Which of the following is an example of hazardous waste?</p>
+        <label><input type="radio" name="q3" value="a"> Paper</label>
+        <label><input type="radio" name="q3" value="b"> Battery</label>
+        <label><input type="radio" name="q3" value="c"> Vegetable peels</label>
+      </div>
+
+      <div class="question">
+        <p><b>Q4:</b> What is the color code for a bin meant for dry waste in India?</p>
+        <label><input type="radio" name="q4" value="a"> Blue</label>
+        <label><input type="radio" name="q4" value="b"> Green</label>
+        <label><input type="radio" name="q4" value="c"> Red</label>
+      </div>
+
+      <div class="question">
+        <p><b>Q5:</b> Which of the following is a benefit of waste segregation?</p>
+        <label><input type="radio" name="q5" value="a"> Increases pollution</label>
+        <label><input type="radio" name="q5" value="b"> Makes recycling easier</label>
+        <label><input type="radio" name="q5" value="c"> Increases landfill space</label>
+      </div>
+
+      <button onclick="checkQuiz()">Submit Quiz</button>
+      
+      <div id="score-display">
+        <h3>Your Score: <span id="score"></span>/5 (<span id="percentage"></span>%)</h3>
+        <p id="score-message"></p>
+        <button id="retry-btn" onclick="resetQuiz()" style="display: none;">Try Again</button>
+      </div>
+    </div>
+
+    <!-- Certificate Section -->
+    <div id="certificate">
+      <h2>🎉 Congratulations! 🎉</h2>
+      <p>You have successfully completed the Waste Management Training Module.</p>
+      
+      <div class="certificate-content">
+        <h3>Certificate of Completion</h3>
+        <p>This is awarded to:</p>
+        <h4 id="username">[Your Name]</h4>
+        <p>For successfully completing the Waste Management Training with a score of <span id="cert-score"></span>/5</p>
+        <p>Date: <span id="cert-date"></span></p>
+      </div>
+      
+      <button onclick="downloadCertificate()">Download Certificate</button>
+    </div>
+  </div>
+
+  <script>
+    // Quiz answers
+    const answers = {
+      q1: "b", // Wet waste
+      q2: "c", // Waste generator
+      q3: "b", // Hazardous waste
+      q4: "a", // Dry waste bin color
+      q5: "b"  // Benefit of waste segregation
+    };
+    
+    function checkQuiz() {
+      let score = 0;
+      const totalQuestions = Object.keys(answers).length;
+      
+      // Check each question
+      for (let i = 1; i <= totalQuestions; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        
+        if (!selected) {
+          alert("Please answer all questions!");
+          return;
+        }
+        
+        if (selected.value === answers[`q${i}`]) {
+          score++;
+        }
+      }
+      
+      // Calculate percentage
+      const percentage = Math.round((score / totalQuestions) * 100);
+      
+      // Display score
+      document.getElementById("score").textContent = score;
+      document.getElementById("percentage").textContent = percentage;
+      
+      const scoreDisplay = document.getElementById("score-display");
+      const scoreMessage = document.getElementById("score-message");
+      const retryBtn = document.getElementById("retry-btn");
+      
+      scoreDisplay.style.display = "block";
+      
+      if (percentage >= 80) {
+        scoreMessage.textContent = "Great job! You've passed the quiz and earned your certificate.";
+        scoreMessage.className = "success";
+        retryBtn.style.display = "none";
+        
+        // Show certificate after a short delay
+        setTimeout(() => {
+          document.getElementById("certificate").style.display = "block";
+          document.getElementById("cert-score").textContent = score;
+          
+          // Add current date to certificate
+          const now = new Date();
+          document.getElementById("cert-date").textContent = now.toLocaleDateString();
+          
+          // Scroll to certificate
+          document.getElementById("certificate").scrollIntoView({behavior: "smooth"});
+        }, 1500);
+      } else {
+        scoreMessage.textContent = "You need a score of 80% or higher to earn the certificate. Please try again.";
+        scoreMessage.className = "fail";
+        retryBtn.style.display = "inline-block";
+      }
+    }
+    
+    function resetQuiz() {
+      // Clear all selections
+      const allInputs = document.querySelectorAll('input[type="radio"]');
+      allInputs.forEach(input => input.checked = false);
+      
+      // Hide score display
+      document.getElementById("score-display").style.display = "none";
+    }
+    
+    function downloadCertificate() {
+      const username = prompt("Enter your name for the certificate:");
+      
+      if (username) {
+        document.getElementById("username").textContent = username;
+        
+        // In a real implementation, you would generate a PDF here
+        // For this example, we'll create a simple text file
+        
+        const score = document.getElementById("cert-score").textContent;
+        const date = document.getElementById("cert-date").textContent;
+        
+        const certificateContent = `
+          Certificate of Completion
+          Waste Management Training Module
+          
+          This certifies that
+          ${username}
+          has successfully completed the Waste Management Training
+          with a score of ${score}/5
+          
+          Date: ${date}
+        `;
+        
+        const element = document.createElement('a');
+        const file = new Blob([certificateContent], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = "Waste_Management_Certificate.txt";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+    }
+  </script>
+</body>
+</html>

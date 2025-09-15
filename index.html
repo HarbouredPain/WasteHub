@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WasteHub - Community Waste Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base & Dark Aesthetic Styles */
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;transition:all .25s ease}
+    :root{
+      --bg:#000;
+      --muted:#b0b0b0;
+      --card-bg:rgba(20,20,30,0.75);
+      --accent-start:#6e00ff;
+      --accent-end:#ff00f7;
+      --glass:rgba(10,10,15,0.95);
+      --emergency-red:#ff0037;
+    }
+    body{
+      background:var(--bg);
+      color:#e0e0e0;
+      min-height:100vh;
+      display:flex;
+      overflow-x:hidden;
+      position:relative;
+    }
+    body::before{
+      content:'';
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm55ejJnbXR3djNxZnI2eGozMmx3YXN3eHdtaGpvemNmbmpsOWRhaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OAEyw55j0p3SSMG2yE/giphy.gif') center/cover no-repeat;
+      opacity:.18;z-index:-1;pointer-events:none;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      width:260px;height:100vh;background:var(--glass);backdrop-filter:blur(10px);
+      border-right:1px solid rgba(255,255,255,0.06);position:fixed;left:0;top:0;z-index:1000;overflow-y:auto;padding-bottom:60px;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header{padding:22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .sidebar-logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accent-start),var(--accent-end));cursor:pointer}
+    .sidebar-name{font-weight:700;font-size:1.15rem;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sidebar-menu{padding:18px 8px}
+    .sidebar-menu li{list-style:none;margin-bottom:6px}
+    .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:.95rem;border-left:3px solid transparent}
+    .sidebar-menu a:hover{background:rgba(110,0,255,0.08);border-left-color:rgba(110,0,255,0.16);color:#fff;transform:scale(1.02)}
+    .sidebar-menu a.active{background:rgba(255,255,255,0.03);color:#fff;border-left:3px solid var(--accent-start)}
+    .sidebar-menu i{width:28px;text-align:center;font-size:1rem}
+
+    /* Announcements area */
+    .announcements{margin:14px;padding:12px;background:linear-gradient(180deg, rgba(110,0,255,0.06), rgba(255,0,247,0.03));border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+    .announcements h4{font-size:.95rem;margin-bottom:8px;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .announcement-item{font-size:.85rem;color:var(--muted);padding:8px 6px;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    .announcement-item:last-child{border-bottom:0}
+
+    /* Main */
+    .main-content{flex:1;padding:22px;margin-left:260px;min-height:100vh;transition: margin-left 0.3s ease}
+    .top-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    h1{font-size:1.9rem;margin-bottom:12px}
+    p.lead{color:var(--muted);margin-bottom:18px}
+
+    /* Stats and Chart Section */
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .chart-container {
+      flex: 1;
+      min-width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .chart-select {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .pie-chart {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      margin: 0 auto;
+      background: conic-gradient(
+        #6e00ff 0% 30%, 
+        #ff00f7 30% 55%, 
+        #00ff9d 55% 75%,
+        #ffcc00 75% 90%,
+        #ff0037 90% 100%
+      );
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pie-center {
+      width: 90px;
+      height: 90px;
+      background: var(--card-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* Top Right - Admin Login */
+    .top-right{
+      position:fixed;top:18px;right:20px;z-index:1002;display:flex;align-items:center;gap:12px;
+    }
+    .admin-btn{
+      background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
+      color:#fff;padding:10px 16px;border-radius:24px;border:none;font-weight:600;cursor:pointer;box-shadow:0 8px 25px rgba(110,0,255,0.18)
+    }
+    .admin-btn small{display:block;font-size:.7rem;opacity:.9}
+
+    /* Top Right Account */
+    .top-right-account{position:fixed;top:18px;right:120px;z-index:1002}
+    .account-btn{background:rgba(20,20,30,0.85);backdrop-filter:blur(2px);padding:8px 12px;border-radius:20px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1px solid rgba(255,255,255,0.06)}
+    .account-btn:hover{background:rgba(110,0,255,0.12)}
+    .account-dropdown-top{position:absolute;top:110%;right:0;width:220px;background:rgba(12,12,20,0.98);border-radius:8px;border:1px solid rgba(255,255,255,0.04);overflow:hidden;max-height:0;transition:max-height .3s ease}
+    .account-dropdown-top.active{max-height:260px}
+    .account-dropdown-top a{display:flex;align-items:center;gap:10px;padding:10px 12px;color:var(--muted);text-decoration:none}
+    .account-dropdown-top a:hover{background:rgba(255,255,255,0.03);color:#fff}
+
+    /* Cards grid */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:18px;margin-top:20px}
+    .card{background:var(--card-bg);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 20px rgba(0,0,0,0.4);transition:transform .25s cubic-bezier(.2,.9,.3,1), box-shadow 0.3s ease}
+    .card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(110,0,255,0.12), 0 0 20px rgba(110, 0, 255, 0.3)}
+    .card h3{font-size:1.05rem;margin-bottom:8px}
+    .card p{color:var(--muted);font-size:.9rem;line-height:1.4;margin-bottom:10px}
+    .card .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));color:#fff;text-decoration:none;border:none;cursor:pointer;font-weight:600}
+    .tag{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-size:.78rem;margin-right:8px}
+
+    /* Emergency Card */
+    .emergency-card {
+      background: linear-gradient(135deg, rgba(255,0,55,0.15), rgba(255,0,55,0.05));
+      border: 1px solid rgba(255,0,55,0.2);
+      animation: pulse 2s infinite;
+    }
+    .emergency-card:hover {
+      box-shadow: 0 10px 30px rgba(255,0,55,0.2), 0 0 25px rgba(255, 0, 55, 0.4);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,0,55,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(255,0,55,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,0,55,0); }
+    }
+
+    /* Map placeholder & small elements */
+    .map-placeholder{height:200px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.95rem;border:1px dashed rgba(255,255,255,0.03)}
+    .leaderboard{display:flex;flex-direction:column;gap:10px}
+    .leader-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.02)}
+    .small-muted{color:var(--muted);font-size:.85rem}
+
+    /* Floating Report Button */
+    .floating-create-btn{position:fixed;bottom:28px;right:28px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent-start),var(--accent-end));color:#fff;border:none;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:999;box-shadow:0 12px 30px rgba(110,0,255,0.18)}
+    .floating-create-btn:hover{transform:scale(1.06)}
+
+    /* Modal styles */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px}
+    .modal{width:100%;max-width:720px;background:rgba(9,9,14,0.98);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04)}
+    .modal h3{margin-bottom:10px}
+    .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .input, textarea, select{width:100%;padding:10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);color:#fff}
+    textarea{min-height:90px}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+
+    /* Emergency Modal */
+    .emergency-modal .modal {
+      border: 1px solid rgba(255,0,55,0.3);
+      box-shadow: 0 0 25px rgba(255,0,55,0.2);
+    }
+    .emergency-modal h3 {
+      color: var(--emergency-red);
+    }
+
+    /* Mobile Toggle Button */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 1001;
+      background: rgba(20,20,30,0.85);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* responsive */
+    @media (max-width:1100px){
+      .cards-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:768px){
+      .sidebar{
+        transform: translateX(-100%);
+        width: 260px;
+      }
+      .sidebar.active{
+        transform: translateX(0);
+      }
+      .main-content{margin-left:0;padding:14px}
+      .mobile-toggle{display:flex}
+      .top-right-account{right:80px}
+    }
+    @media (max-width:600px){
+      .cards-grid{grid-template-columns:1fr}
+      .stats-container {
+        flex-direction: column;
+      }
+      .chart-container {
+        min-width: auto;
+      }
+    }
+    @media (max-width:420px){
+      .admin-btn{display:none}
+      .top-right-account{right:12px}
+      .top-right{right:14px;top:14px}
+      .account-btn span{display:none}
+      .account-btn{padding:8px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Toggle Button -->
+  <div class="mobile-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Main sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" aria-hidden="true" id="logoCollapse"></div>
+      <div class="sidebar-name">WasteHub</div>
+    </div>
+
+    <ul class="sidebar-menu" role="menu" aria-label="Main menu">
+      <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+      <li><a href="#mapCard"><i class="fas fa-map-marker-alt"></i> <span>Facilities Map</span></a></li>
+      <li><a href="#training"><i class="fas fa-graduation-cap"></i> <span>Training & Certification</span></a></li>
+      <li><a href="#reporting"><i class="fas fa-flag"></i> <span>Reports & Monitoring</span></a></li>
+      <li><a href="#incentives"><i class="fas fa-gift"></i> <span>Incentives & Penalties</span></a></li>
+      <li><a href="#community"><i class="fas fa-users"></i> <span>Leaderboard & Chat</span></a></li>
+      <li><a href="#admin"><i class="fas fa-cog"></i> <span>Admin / ULB</span></a></li>
+    </ul>
+
+    <div class="announcements" aria-live="polite">
+      <h4>Announcements</h4>
+      <div class="announcement-item">Sep 10: New compost kits available at community center A.</div>
+      <div class="announcement-item">Sep 5: Scheduled vehicle maintenance in Ward 7 — expect delayed pickups.</div>
+      <div class="announcement-item">Aug 28: Zero-waste challenge winners announced — Ward 3.</div>
+    </div>
+
+  </nav>
+
+  <!-- Top Right Admin / Account -->
+  <div class="top-right" role="toolbar" aria-label="Top actions">
+    <div class="top-right-account">
+      <div class="account-btn" id="topAccountToggle"><i class="fas fa-user"></i><span class="account-text">Account</span></div>
+      <div class="account-dropdown-top" id="accountDropdown">
+        <a href="#" id="openSignIn"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+        <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+
+    <button class="admin-btn" id="adminLoginBtn" title="Admin / ULB Dashboard">
+      <small>Admin</small>
+      <div>ULB Dashboard</div>
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+    <div class="top-row">
+      <div>
+        <h1>Community Waste Management</h1>
+        <p class="lead">Train, report, and track — make waste a resource. Use the app to report dumping, find recyclers, and earn rewards.</p>
+      </div>
+      <div class="small-muted">Welcome • <strong>Lysander</strong></div>
+    </div>
+
+    <!-- Stats and Chart Section -->
+    <div class="stats-container">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Waste Management Stats</h3>
+          <select class="chart-select" id="chartSelect">
+            <option>Last 7 Days</option>
+            <option>Last 30 Days</option>
+            <option>Last Quarter</option>
+          </select>
+        </div>
+        <div class="pie-chart">
+          <div class="pie-center">85%</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background:#6e00ff"></div>
+            <span>Recycled</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background:#ff00f7"></div>
+            <span>Composted</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background:#00ff9d"></div>
+            <span>Processed</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background:#ffcc00"></div>
+            <span>In Transit</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background:#ff0037"></div>
+            <span>Emergency</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Deployed Personnel</h3>
+          <select class="chart-select" id="personnelSelect">
+            <option>By Department</option>
+            <option>By Location</option>
+            <option>By Specialization</option>
+          </select>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+          <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #6e00ff;">42</div>
+              <div style="font-size: 0.8rem;">Collection</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #ff00f7;">28</div>
+              <div style="font-size: 0.8rem;">Processing</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #00ff9d;">15</div>
+              <div style="font-size: 0.8rem;">Emergency</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Available Personnel:</span>
+              <span style="font-weight: bold;">85/92</span>
+            </div>
+            <div style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
+              <div style="height: 100%; width: 92%; background: linear-gradient(90deg, #6e00ff, #ff00f7);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <section class="cards-grid" aria-label="Features">
+     <article class="card" id="training">
+  <h3>Citizen Training & Certification</h3>
+  <p>Interactive modules and quick quizzes to earn your Waste Literacy badge. Certificate stored on your profile.</p>
+  <a href="Certificate.html">
+    <button class="btn">Start Training</button>
+  </a>
+</article>
+
+      <article class="card">
+        <h3>3-Bin System</h3>
+        <p>Learn and download guides for Wet (Green), Dry (Blue) and Hazardous (Red) bins. Get reminders for segregation.</p>
+        <div style="margin-top:10px">
+          <span class="tag">Wet</span><span class="tag">Dry</span><span class="tag">Hazardous</span>
+        </div>
+      </article>
+
+     <article class="card">
+  <h3>Waste Collection Tracking</h3>
+  <p>View pickup schedules and track collection vehicles in real time. No collection alerts for unsorted waste.</p>
+  <a href="TrackVehicle.html">
+    <button class="btn">Track Vehicles</button>
+  </a>
+</article>
+
+
+      <article class="card" id="reporting">
+        <h3>Reporting & Monitoring</h3>
+        <p>Upload geo-tagged photos of illegal dumping or open burning. Green Champions receive instant alerts.</p>
+        <button class="btn" id="openReportBtn">Report Waste</button>
+      </article>
+
+      <article class="card" id="mapCard">
+        <h3>Facilities & Locator Map</h3>
+        <p>Find recycling centers, biogas/composting plants and scrap shops near you. Filter by waste type.</p>
+        <div class="map-placeholder">Map placeholder (integrate Leaflet / Google Maps)</div>
+      </article>
+
+      <article class="card" id="incentives">
+        <h3>Incentives & Penalties</h3>
+        <p>Earn points for proper segregation. Points redeemable for utility discounts. Persistent violators receive automated notices.</p>
+        <button class="btn" onclick="viewIncentives()">View Rewards</button>
+      </article>
+
+      <article class="card">
+        <h3>Zero-Waste Grocery / Marketplace</h3>
+        <p>Sell scrap directly to local recyclers. Instant UPI payments and rated recycler list.</p>
+      </article>
+
+      <article class="card" id="community">
+        <h3>Leaderboard & Community Chat</h3>
+        <p>Community rankings, volunteer signups, and a public chat for local Green Champions.</p>
+        <div class="leaderboard" style="margin-top:12px">
+          <div class="leader-item"><strong>Ward 3</strong><span>Points: 12,450</span></div>
+          <div class="leader-item"><strong>Colony A</strong><span>Points: 9,320</span></div>
+          <div class="leader-item"><strong>Block B</strong><span>Points: 7,840</span></div>
+        </div>
+      </article>
+
+   <article class="card" id="admin">
+  <h3>Admin / ULB Dashboard</h3>
+  <p>Area-wise compliance metrics, vehicle routes, report queue, and analytics for ULB officers.</p>
+  <a href="Report.html">
+    <button class="btn">Open Dashboard</button>
+  </a>
+</article>
+      <!-- Emergency Card -->
+      <article class="card emergency-card" id="emergencyCard">
+        <h3><i class="fas fa-exclamation-triangle"></i> Emergency Response</h3>
+        <p>Dispatch highly trained personnel for chemical or hazardous waste leaks. Immediate response protocol.</p>
+        <button class="btn" style="background: linear-gradient(90deg, #ff0037, #ff5e00)" id="openEmergencyBtn">Request Emergency Dispatch</button>
+      </article>
+
+    </section>
+
+    <!-- Testimonials / Stories -->
+    <section class="testimonials" style="margin-top:28px" id="testimonials">
+      <h2 style="font-size:1.25rem;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px">Impact Stories</h2>
+
+      <div class="card testimonial-card">
+        <p style="color:var(--muted);line-height:1.5">"A local compost drive reduced landfill waste by 35% in our ward. The app made reporting easier and volunteers mobilized fast."</p>
+        <div style="margin-top:8px"><strong>- Maya, Green Champion</strong><div class="small-muted">Ward 3</div></div>
+      </div>
+
+      <div class="card testimonial-card">
+        <p style="color:var(--muted);line-height:1.5">"We started selling scrap through the marketplace and earned extra revenue for community programs."</p>
+        <div style="margin-top:8px"><strong>- Ajay, Recycler</strong><div class="small-muted">Block B</div></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Floating Report Button -->
+  <button class="floating-create-btn" id="openReportFloat"><i class="fas fa-plus"></i></button>
+
+  <!-- Report Modal -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+      <h3 id="reportTitle">Report Illegal Dumping / Burning</h3>
+      <p class="small-muted">Upload a photo, add location (auto-detect or manual), and a brief description.</p>
+
+      <div class="form-row">
+        <input class="input" id="reportImage" type="file" accept="image/*" />
+      </div>
+
+      <div class="form-row">
+        <input class="input" id="reportLocation" type="text" placeholder="Location (click Detect to auto-fill)" />
+        <button class="btn" id="detectLocation">Detect</button>
+      </div>
+
+      <div class="form-row">
+        <textarea id="reportDesc" placeholder="Describe the issue (e.g., burning, open dump, nearby landmark)"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="submitReport">Submit Report</button>
+        <button class="btn" id="closeReport" style="background:rgba(255,255,255,0.06)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Modal -->
+  <div class="modal-backdrop emergency-modal" id="emergencyModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="emergencyTitle">
+      <h3 id="emergencyTitle"><i class="fas fa-exclamation-triangle"></i> Emergency Dispatch Request</h3>
+      <p class="small-muted">Report hazardous waste leaks or chemical spills for immediate response by trained personnel.</p>
+
+      <div class="form-row">
+        <select class="input" id="emergencyType">
+          <option value="">Select Emergency Type</option>
+          <option value="chemical">Chemical Spill</option>
+          <option value="hazardous">Hazardous Waste Leak</option>
+          <option value="medical">Medical Waste Exposure</option>
+          <option value="other">Other Emergency</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <input class="input" id="emergencyImage" type="file" accept="image/*" />
+      </div>
+
+      <div class="form-row">
+        <textarea id="emergencyDesc" placeholder="Describe the emergency in detail including any visible hazards"></textarea>
+      </div>
+
+      <div class="form-row">
+        <input class="input" id="emergencyLocation" type="text" placeholder="Exact location of emergency" />
+        <button class="btn" id="emergencyDetectLocation">Detect My Location</button>
+      </div>
+
+      <div class="form-row">
+        <input class="input" id="emergencyContact" type="text" placeholder="Your contact number" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" style="background: linear-gradient(90deg, #ff0037, #ff5e00)" id="submitEmergency">Request Emergency Dispatch</button>
+        <button class="btn" id="closeEmergency" style="background:rgba(255,255,255,0.06)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SignIn Modal -->
+  <div class="modal-backdrop" id="signModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signinTitle">
+      <h3 id="signinTitle">Sign In</h3>
+      <p class="small-muted">Sign in to access your profile, certificates and rewards.</p>
+
+      <div class="form-row">
+        <input class="input" id="email" placeholder="Email or Mobile" />
+      </div>
+      <div class="form-row">
+        <input class="input" id="password" type="password" placeholder="Password" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="doSignIn">Sign In</button>
+        <button class="btn" id="closeSign" style="background:rgba(255,255,255,0.06)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const logoCollapse = document.getElementById('logoCollapse');
+    const mainContent = document.querySelector('.main-content');
+    
+    function toggleSidebar() {
+      sidebar.classList.toggle('active');
+      sidebarToggle.innerHTML = sidebar.classList.contains('active') ? 
+        '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    }
+    
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    logoCollapse.addEventListener('click', toggleSidebar);
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && 
+          sidebar.classList.contains('active') &&
+          !e.target.closest('.sidebar') && 
+          !e.target.closest('.mobile-toggle')) {
+        toggleSidebar();
+      }
+    });
+
+    // Account dropdown
+    const topAccountToggle = document.getElementById('topAccountToggle');
+    const accountDropdown = document.getElementById('accountDropdown');
+    topAccountToggle && topAccountToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      accountDropdown.classList.toggle('active');
+    });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.top-right-account')) accountDropdown.classList.remove('active');
+    });
+
+    // Report modal open/close
+    const reportModal = document.getElementById('reportModal');
+    const openReportBtn = document.getElementById('openReportBtn');
+    const openReportFloat = document.getElementById('openReportFloat');
+    const closeReport = document.getElementById('closeReport');
+    openReportBtn && openReportBtn.addEventListener('click', () => showReport());
+    openReportFloat && openReportFloat.addEventListener('click', () => showReport());
+    closeReport && closeReport.addEventListener('click', () => hideReport());
+    function showReport(){ reportModal.style.display='flex'; }
+    function hideReport(){ reportModal.style.display='none'; }
+
+    // Emergency modal open/close
+    const emergencyModal = document.getElementById('emergencyModal');
+    const openEmergencyBtn = document.getElementById('openEmergencyBtn');
+    const closeEmergency = document.getElementById('closeEmergency');
+    openEmergencyBtn && openEmergencyBtn.addEventListener('click', () => showEmergency());
+    closeEmergency && closeEmergency.addEventListener('click', () => hideEmergency());
+    function showEmergency(){ emergencyModal.style.display='flex'; }
+    function hideEmergency(){ emergencyModal.style.display='none'; }
+
+    // Detect location (browser geolocation)
+    function setupLocationDetection(buttonId, inputId) {
+      document.getElementById(buttonId)?.addEventListener('click', async (ev) => {
+        ev.preventDefault();
+        const locInput = document.getElementById(inputId);
+        locInput.value = 'Detecting...';
+        if (!navigator.geolocation) { locInput.value = 'Geolocation not supported'; return; }
+        navigator.geolocation.getCurrentPosition(pos => {
+          const {latitude, longitude} = pos.coords;
+          locInput.value = `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)}`;
+        }, err => {
+          locInput.value = 'Permission denied or unavailable';
+        }, {timeout:10000});
+      });
+    }
+    
+    setupLocationDetection('detectLocation', 'reportLocation');
+    setupLocationDetection('emergencyDetectLocation', 'emergencyLocation');
+
+    // Submit report (front-end stub)
+    document.getElementById('submitReport')?.addEventListener('click', () => {
+      const img = document.getElementById('reportImage').files[0] || null;
+      const loc = document.getElementById('reportLocation').value || '';
+      const desc = document.getElementById('reportDesc').value || '';
+      const payload = {image: img ? img.name : null, location: loc, description: desc, timestamp: new Date().toISOString()};
+      console.log('Report submitted (stub):', payload);
+      alert('Report submitted — ULB will review it. (This is a front-end demo.)');
+      hideReport();
+    });
+
+    // Submit emergency (front-end stub)
+    document.getElementById('submitEmergency')?.addEventListener('click', () => {
+      const type = document.getElementById('emergencyType').value || '';
+      const img = document.getElementById('emergencyImage').files[0] || null;
+      const desc = document.getElementById('emergencyDesc').value || '';
+      const loc = document.getElementById('emergencyLocation').value || '';
+      const contact = document.getElementById('emergencyContact').value || '';
+      
+      if (!type) {
+        alert('Please select an emergency type');
+        return;
+      }
+      
+      const payload = {
+        type: type, 
+        image: img ? img.name : null, 
+        description: desc, 
+        location: loc,
+        contact: contact,
+        timestamp: new Date().toISOString()
+      };
+      
+      console.log('Emergency report submitted (stub):', payload);
+      alert('EMERGENCY DISPATCH REQUESTED! Trained personnel are being notified. Stay in a safe location. (This is a front-end demo.)');
+      hideEmergency();
+    });
+
+    // Sign-in modal controls
+    const signModal = document.getElementById('signModal');
+    const openSignIn = document.getElementById('openSignIn');
+    const closeSign = document.getElementById('closeSign');
+    openSignIn && openSignIn.addEventListener('click', (e) => { e.preventDefault(); signModal.style.display='flex'; accountDropdown.classList.remove('active'); });
+    closeSign && closeSign.addEventListener('click', () => signModal.style.display='none');
+    document.getElementById('doSignIn')?.addEventListener('click', () => {
+      const email = document.getElementById('email').value;
+      console.log('Sign in (stub):', email);
+      alert('Signed in (demo).');
+      signModal.style.display='none';
+    });
+
+    // Admin login button
+    document.getElementById('adminLoginBtn')?.addEventListener('click', () => {
+      alert('Redirect to Admin / ULB Dashboard (stub).');
+      // In production: window.location = '/admin';
+    });
+
+    // Simple feature functions
+    function startTraining(){ alert('Open training modules (stub)'); }
+    function openTracking(){ alert('Open vehicle tracking view (stub)'); }
+    function viewIncentives(){ alert('Open incentives panel (stub)'); }
+    function openAdmin(){ alert('Open Admin Dashboard (stub)'); }
+
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(back => {
+      back.addEventListener('click', (e) => {
+        if (e.target === back) back.style.display='none';
+      });
+    });
+
+    // Initialize small dynamic elements or future dynamic card additions can be handled here
+    console.log('UI initialized. This is a front-end prototype — connect to a backend to persist data.');
+  </script>
+
+</body>
+</html>

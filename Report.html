@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Waste Management Reports</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #3c1361, #6a1b9a);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .chart-card {
+      background: #1e1e2f;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #bb86fc;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-evenly;
+      margin-top: 15px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .alert { background: #ff1744; color: white; }
+    .abort { background: #d500f9; color: white; }
+    .postpone { background: #ff9100; color: black; }
+    .reallocate { background: #00e676; color: black; }
+  </style>
+</head>
+<body>
+  <header>📊 Waste Management Report Dashboard</header>
+
+  <div class="container">
+    <!-- Bar Chart -->
+    <div class="chart-card">
+      <h3>Waste Collected by Area</h3>
+      <canvas id="barChart"></canvas>
+      <div class="button-group">
+        <button class="btn alert">Alert</button>
+        <button class="btn abort">Abort</button>
+        <button class="btn postpone">Postpone</button>
+        <button class="btn reallocate">Reallocate</button>
+      </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="chart-card">
+      <h3>Types of Waste</h3>
+      <canvas id="pieChart"></canvas>
+      <div class="button-group">
+        <button class="btn alert">Alert</button>
+        <button class="btn abort">Abort</button>
+        <button class="btn postpone">Postpone</button>
+        <button class="btn reallocate">Reallocate</button>
+      </div>
+    </div>
+
+    <!-- Doughnut Chart -->
+    <div class="chart-card">
+      <h3>Vehicle Utilization</h3>
+      <canvas id="doughnutChart"></canvas>
+      <div class="button-group">
+        <button class="btn alert">Alert</button>
+        <button class="btn abort">Abort</button>
+        <button class="btn postpone">Postpone</button>
+        <button class="btn reallocate">Reallocate</button>
+      </div>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="chart-card">
+      <h3>Waste Growth Trend</h3>
+      <canvas id="lineChart"></canvas>
+      <div class="button-group">
+        <button class="btn alert">Alert</button>
+        <button class="btn abort">Abort</button>
+        <button class="btn postpone">Postpone</button>
+        <button class="btn reallocate">Reallocate</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Bar Chart
+    new Chart(document.getElementById("barChart"), {
+      type: 'bar',
+      data: {
+        labels: ["Zone A", "Zone B", "Zone C", "Zone D"],
+        datasets: [{
+          label: "Tons Collected",
+          data: [120, 90, 150, 80],
+          backgroundColor: ["#bb86fc","#03dac6","#ff0266","#ff9100"]
+        }]
+      }
+    });
+
+    // Pie Chart
+    new Chart(document.getElementById("pieChart"), {
+      type: 'pie',
+      data: {
+        labels: ["Plastic", "Organic", "Metal", "Glass"],
+        datasets: [{
+          data: [40, 25, 20, 15],
+          backgroundColor: ["#ff0266","#03dac6","#ff9100","#bb86fc"]
+        }]
+      }
+    });
+
+    // Doughnut Chart
+    new Chart(document.getElementById("doughnutChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ["Active", "Idle", "Under Maintenance"],
+        datasets: [{
+          data: [70, 20, 10],
+          backgroundColor: ["#00e676","#ff9100","#ff1744"]
+        }]
+      }
+    });
+
+    // Line Chart
+    new Chart(document.getElementById("lineChart"), {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+        datasets: [{
+          label: "Waste Growth (Tons)",
+          data: [100, 120, 140, 160, 180],
+          borderColor: "#bb86fc",
+          fill: false,
+          tension: 0.3
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
